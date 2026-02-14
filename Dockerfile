@@ -5,12 +5,10 @@ ARG VERSION
 ARG ENABLE_BUMP=false
 
 COPY package.json bun.lock ./
-RUN --mount=type=cache,id=bun-install-cache,target=/root/.bun/install/cache \
-    bun install --frozen-lockfile
+RUN bun install --frozen-lockfile
 
 COPY ui/package.json ui/bun.lock ./ui/
-RUN --mount=type=cache,id=bun-ui-install-cache,target=/root/.bun/install/cache \
-    cd ui && bun install --frozen-lockfile
+RUN cd ui && bun install --frozen-lockfile
 
 COPY . .
 
@@ -21,8 +19,7 @@ RUN if [ "$ENABLE_BUMP" = "true" ]; then \
       echo "Skipping version bump (ENABLE_BUMP=false)"; \
     fi
 
-RUN --mount=type=cache,id=bun-build-cache,target=/root/.bun/install/cache \
-    bun run build:server
+RUN bun run build:server
 
 FROM node:22-alpine
 
