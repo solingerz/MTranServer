@@ -8,7 +8,7 @@ services:
     ports:
       - "8989:8989"
     environment:
-      - MT_HOST=127.0.0.1
+      - MT_HOST=0.0.0.0
       - MT_PORT=8989
       - MT_ENABLE_UI=true
       - MT_OFFLINE=false

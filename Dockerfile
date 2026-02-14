@@ -1,9 +1,6 @@
 FROM oven/bun:1 AS builder
 WORKDIR /app
 
-ARG VERSION
-ARG ENABLE_BUMP=false
-
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
@@ -11,13 +8,6 @@ COPY ui/package.json ui/bun.lock ./ui/
 RUN cd ui && bun install --frozen-lockfile
 
 COPY . .
-
-RUN if [ "$ENABLE_BUMP" = "true" ]; then \
-      if [ -z "$VERSION" ]; then VERSION=$(bun -p "require('./package.json').version"); fi; \
-      bun run bump "$VERSION"; \
-    else \
-      echo "Skipping version bump (ENABLE_BUMP=false)"; \
-    fi
 
 RUN bun run build:server
 
