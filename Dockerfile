@@ -2,7 +2,7 @@ FROM oven/bun:1 AS builder
 WORKDIR /app
 
 ARG VERSION
-ENV VERSION=${VERSION}
+ARG ENABLE_BUMP=false
 
 COPY package.json bun.lock ./
 RUN --mount=type=cache,target=/root/.bun/install/cache \
@@ -14,11 +14,15 @@ RUN --mount=type=cache,target=/root/.bun/install/cache \
 
 COPY . .
 
-RUN if [ -z "$VERSION" ]; then VERSION=$(bun -p "require('./package.json').version"); fi; \
-    bun run bump "$VERSION"
+RUN if [ "$ENABLE_BUMP" = "true" ]; then \
+      if [ -z "$VERSION" ]; then VERSION=$(bun -p "require('./package.json').version"); fi; \
+      bun run bump "$VERSION"; \
+    else \
+      echo "Skipping version bump (ENABLE_BUMP=false)"; \
+    fi
 
 RUN --mount=type=cache,target=/root/.bun/install/cache \
-    bun run build:node
+    bun run build:server
 
 FROM node:22-alpine
 

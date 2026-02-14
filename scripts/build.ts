@@ -6,8 +6,9 @@ const version = pkg.version;
 const args = new Set(Bun.argv.slice(2));
 const isLib = args.has("--lib");
 const isNode = args.has("--node") || args.has("--dev");
+const isServer = args.has("--server");
 const isSingle = args.has("--single");
-const isAll = args.has("--all") || (!isLib && !isNode && !isSingle);
+const isAll = args.has("--all") || (!isLib && !isNode && !isServer && !isSingle);
 
 const allTargets = [
   { bun: "bun-darwin-x64", name: "darwin-amd64" },
@@ -62,6 +63,13 @@ if (isLib) {
 if (isNode) {
   console.log("Building for Node...");
   await $`bun build src/main.ts src/desktop.ts --outdir dist --target node --format esm --minify`;
+  console.log("Build complete!");
+  process.exit(0);
+}
+
+if (isServer) {
+  console.log("Building server only...");
+  await $`bun build src/main.ts --outdir dist --target node --format esm --minify`;
   console.log("Build complete!");
   process.exit(0);
 }

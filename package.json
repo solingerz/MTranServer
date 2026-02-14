@@ -29,6 +29,7 @@
     "build:all": "bun scripts/build.ts --all",
     "build:docker": "docker build -t xxnuo/mtranserver:latest .",
     "build:node": "bun scripts/build.ts --node",
+    "build:server": "bun scripts/build.ts --server",
     "build:dev": "bun scripts/build.ts --dev",
     "build:lib": "bun scripts/build.ts --lib",
     "build:electron": "bun run scripts/electron-build.ts"

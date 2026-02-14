@@ -1,20 +1,25 @@
 services:
   mtranserver:
-    image: xxnuo/mtranserver:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: mtranserver
     restart: unless-stopped
     ports:
       - "8989:8989"
     environment:
-      - MT_HOST=0.0.0.0
+      - MT_HOST=127.0.0.1
       - MT_PORT=8989
       - MT_ENABLE_UI=true
       - MT_OFFLINE=false
+      - MT_WORKER_IDLE_TIMEOUT=300
+      - MT_WORKERS_PER_LANGUAGE=1
+      - MT_CACHE_SIZE=500
       # - MT_API_TOKEN=your_secret_token_here  # 取消注释以启用 API 认证
     volumes:
       - ./models:/app/models    # 翻译模型目录
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8989/health"]
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8989/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
       timeout: 3s
       retries: 3

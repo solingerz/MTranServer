@@ -11,3 +11,7 @@ deprecated
 tests
 coverage
 *.log
+docs
+example
+images
+desktop
