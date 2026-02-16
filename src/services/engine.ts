@@ -46,6 +46,44 @@ function needsPivotTranslation(fromLang: string, toLang: string): boolean {
   return true;
 }
 
+function evictLeastRecentlyUsedEngine(requiredKey: string) {
+  const { maxActiveEngines } = getConfig();
+  if (maxActiveEngines <= 0) {
+    return;
+  }
+
+  while (engines.size >= maxActiveEngines) {
+    let oldestKey: string | null = null;
+    let oldestTime = Number.POSITIVE_INFINITY;
+
+    for (const [key, info] of engines) {
+      if (key === requiredKey) continue;
+      const ts = info.lastUsed.getTime();
+      if (ts < oldestTime) {
+        oldestTime = ts;
+        oldestKey = key;
+      }
+    }
+
+    if (!oldestKey) {
+      break;
+    }
+
+    const info = engines.get(oldestKey);
+    if (!info) {
+      break;
+    }
+
+    if (info.timer) {
+      clearTimeout(info.timer);
+    }
+
+    logger.info(`Evicting engine ${oldestKey} due to max-active-engines limit`);
+    info.engine.destroy();
+    engines.delete(oldestKey);
+  }
+}
+
 async function getOrCreateSingleEngine(
   fromLang: string,
   toLang: string
@@ -63,6 +101,8 @@ async function getOrCreateSingleEngine(
     logger.debug(`Waiting for existing engine initialization for ${key}...`);
     return loadingPromises.get(key)!;
   }
+
+  evictLeastRecentlyUsedEngine(key);
 
   const initPromise = (async () => {
     try {

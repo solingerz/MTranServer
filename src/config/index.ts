@@ -13,6 +13,7 @@ export interface Config {
   enableOfflineMode: boolean;
   workerIdleTimeout: number;
   workersPerLanguage: number;
+  maxActiveEngines: number;
   apiToken: string;
   logDir: string;
   logToFile: boolean;
@@ -133,6 +134,7 @@ export function getConfig(): Config {
 
     workerIdleTimeout: getInt('--worker-idle-timeout', 'MT_WORKER_IDLE_TIMEOUT', fileConfig.workerIdleTimeout ?? 60),
     workersPerLanguage: getInt('--workers-per-language', 'MT_WORKERS_PER_LANGUAGE', fileConfig.workersPerLanguage ?? 1),
+    maxActiveEngines: getInt('--max-active-engines', 'MT_MAX_ACTIVE_ENGINES', fileConfig.maxActiveEngines ?? 0),
     maxSentenceLength: getInt('--max-sentence-length', 'MT_MAX_SENTENCE_LENGTH', fileConfig.maxSentenceLength ?? 512),
     fullwidthZhPunctuation: getBool('--fullwidth-zh-punctuation', 'MT_FULLWIDTH_ZH_PUNCTUATION', fileConfig.fullwidthZhPunctuation ?? true),
 
@@ -144,7 +146,7 @@ export function getConfig(): Config {
 
     checkUpdate: getBool('--check-update', 'MT_CHECK_UPDATE', fileConfig.checkUpdate ?? true),
 
-    cacheSize: getInt('--cache-size', 'MT_CACHE_SIZE', fileConfig.cacheSize ?? 1000),
+    cacheSize: getInt('--cache-size', 'MT_CACHE_SIZE', fileConfig.cacheSize ?? 0),
   };
 
   return globalConfig;

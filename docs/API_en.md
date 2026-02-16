@@ -14,7 +14,9 @@
 | MT_ENABLE_UI          | Enable Web UI                            | true    | true, false                 |
 | MT_OFFLINE            | Offline mode, disable automatic download of new language models, only use downloaded models | false   | true, false                 |
 | MT_WORKER_IDLE_TIMEOUT| Worker idle timeout (seconds)            | 300     | Any positive integer        |
+| MT_MAX_ACTIVE_ENGINES | Max loaded translation engines (0 means unlimited) | 0       | 0 or any positive integer   |
 | MT_API_TOKEN          | API access token                         | empty   | Any string                  |
+| MT_CACHE_SIZE         | Translation cache size (number of recent results) | 0       | Any positive integer        |
 
 Example:
 

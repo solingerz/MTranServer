@@ -47,26 +47,23 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@tsoa/runtime": "^7.0.0-alpha.0",
     "@types/bun": "^1.3.5",
-    "@types/express": "^5.0.6",
     "@types/node": "^25.0.3",
-    "@types/swagger-ui-express": "^4.1.8",
-    "tsoa": "^7.0.0-alpha.0",
     "tsx": "^4.21.0",
     "electron": "^39.2.7",
     "electron-builder": "^26.4.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "express": "^5.2.1",
-    "express-validator": "^7.3.1",
+    "@hono/node-server": "^1.14.4",
     "fzstd": "^0.1.1",
+    "hono": "^4.8.5",
     "lru-cache": "^11.2.4",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-dist": "^5.28.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "bun": ">=1.1.0"
   },
   "build": {
     "publish": null,

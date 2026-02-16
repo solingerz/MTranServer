@@ -49,12 +49,9 @@ await $`bun run scripts/gen-ui-assets.ts`;
 console.log("Generating Swagger assets map...");
 await $`bun run scripts/gen-swagger-assets.ts`;
 
-console.log("Generating routes and spec...");
-await $`bun tsoa spec-and-routes`;
-
 if (isLib) {
   console.log("Building library...");
-  await $`bun build src/index.ts src/main.ts --outdir dist --target node --format esm --external zstd-wasm-decoder --external express --external express-validator --external fzstd --external lru-cache --external swagger-ui-express`;
+  await $`bun build src/index.ts src/main.ts --outdir dist --target node --format esm --external zstd-wasm-decoder --external fzstd --external lru-cache`;
   await $`tsc -p tsconfig.lib.json`;
   console.log("Build complete!");
   process.exit(0);
@@ -69,7 +66,7 @@ if (isNode) {
 
 if (isServer) {
   console.log("Building server only...");
-  await $`bun build src/main.ts --outdir dist --target node --format esm --minify`;
+  await $`bun build src/main.ts --outdir dist --target bun --format esm --minify`;
   console.log("Build complete!");
   process.exit(0);
 }

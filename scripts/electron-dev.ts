@@ -39,8 +39,6 @@ function startBuildWatch() {
     '--sourcemap',
     '--external',
     'zstd-wasm-decoder',
-    '--external',
-    'express',
     '--watch'
   ]
   return run(bunBin, args)

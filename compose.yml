@@ -12,14 +12,15 @@ services:
       - MT_PORT=8989
       - MT_ENABLE_UI=true
       - MT_OFFLINE=false
-      - MT_WORKER_IDLE_TIMEOUT=300
+      - MT_WORKER_IDLE_TIMEOUT=30
       - MT_WORKERS_PER_LANGUAGE=1
-      - MT_CACHE_SIZE=500
+      - MT_MAX_ACTIVE_ENGINES=1
+      - MT_CACHE_SIZE=0
       # - MT_API_TOKEN=your_secret_token_here  # 取消注释以启用 API 认证
     volumes:
       - ./models:/app/models    # 翻译模型目录
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:8989/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      test: ["CMD", "nc", "-z", "127.0.0.1", "8989"]
       interval: 30s
       timeout: 3s
       retries: 3

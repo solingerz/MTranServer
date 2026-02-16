@@ -2,13 +2,26 @@ import crypto from 'crypto';
 import { LRUCache } from 'lru-cache';
 import { getConfig } from '@/config/index.js';
 
-const config = getConfig();
+let currentCacheSize = Math.max(0, getConfig().cacheSize);
+function createCache(size: number) {
+  return new LRUCache<string, string>({
+    max: size > 0 ? size : 1,
+  });
+}
 
 // Initialize cache with a safe fallback size if disabled.
 // Actual enabling/disabling is handled in the read/write functions.
-const cache = new LRUCache<string, string>({
-  max: config.cacheSize > 0 ? config.cacheSize : 1,
-});
+let cache = createCache(currentCacheSize);
+
+function syncCacheSize() {
+  const nextSize = Math.max(0, getConfig().cacheSize);
+  if (nextSize === currentCacheSize) {
+    return;
+  }
+
+  currentCacheSize = nextSize;
+  cache = createCache(currentCacheSize);
+}
 
 /**
  * Generates a collision-resistant cache key from arguments.
@@ -26,7 +39,8 @@ function getCacheKey(args: any[]): string {
 }
 
 export function readCache(args: any[]): string | null {
-  if (config.cacheSize <= 0) {
+  syncCacheSize();
+  if (currentCacheSize <= 0) {
     return null;
   }
 
@@ -35,7 +49,8 @@ export function readCache(args: any[]): string | null {
 }
 
 export function writeCache(result: string, args: any[]): void {
-  if (config.cacheSize <= 0) {
+  syncCacheSize();
+  if (currentCacheSize <= 0) {
     return;
   }
 

@@ -79,10 +79,7 @@ await updateJsonFile("package.json", ["version"]);
 // 2. ui/package.json
 await updateJsonFile("ui/package.json", ["version"]);
 
-// 3. tsoa.json
-await updateJsonFile("tsoa.json", ["spec", "spec", "info", "version"]);
-
-// 4. src/version/index.ts
+// 3. src/version/index.ts
 await updateTsFile("src/version/index.ts");
 
 console.log("Version bump complete!");
